@@ -8,7 +8,7 @@ import helmet from 'helmet';
 import morgan from 'morgan';
 import path from 'path';    
 import { fileURLToPath } from 'url';
-import { register } from 'module';
+import authRoutes from './routes/auth.js';
 import { register } from './controllers/auth.js';
 
 /******************************************* CONFIGURATION *******************************************/
@@ -39,10 +39,10 @@ const upload = multer({ storage: storage });
 
 /******************************************* ROUTES *******************************************/
 app.post("/auth/register", upload.single("picture"), register);
+app.use("/auth", authRoutes);
 
 
-
-/******************************************* DB SETUP *******************************************/
+/******************************************* DB SETUP & SERVER CONNECTION *******************************************/
 const PORT = process.env.PORT || 6001;
 // Server will run if connection to MongoDB is successful
 mongoose.connect(process.env.MONGO_URL).then(() => {
