@@ -9,7 +9,11 @@ import morgan from 'morgan';
 import path from 'path';    
 import { fileURLToPath } from 'url';
 import authRoutes from './routes/auth.js';
+import userRoutes from './routes/users.js';
+import postsRoutes from './routes/posts.js';
+import { createPost } from './controllers/posts.js';
 import { register } from './controllers/auth.js';
+import { verifyToken } from './middleware/auth.js';
 
 /******************************************* CONFIGURATION *******************************************/
 const __filename = fileURLToPath(import.meta.url); // stores the current filename in the __filename variable
@@ -38,8 +42,11 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 /******************************************* ROUTES *******************************************/
-app.post("/auth/register", upload.single("picture"), register);
+app.post("/auth/register", upload.single("picture"), register); // needs to be here for upload 
+app.post("/posts", verifyToken, upload.single("picture"), createPost);
 app.use("/auth", authRoutes);
+app.use("/users", userRoutes);
+app.use("/posts", postsRoutes);
 
 
 /******************************************* DB SETUP & SERVER CONNECTION *******************************************/
