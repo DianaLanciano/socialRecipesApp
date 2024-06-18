@@ -14,6 +14,9 @@ import postsRoutes from './routes/posts.js';
 import { createPost } from './controllers/posts.js';
 import { register } from './controllers/auth.js';
 import { verifyToken } from './middleware/auth.js';
+import User from "./models/User.js";
+import Post from "./models/Post.js";
+import { users, posts } from "./data/index.js";
 
 /******************************************* CONFIGURATION *******************************************/
 const __filename = fileURLToPath(import.meta.url); // stores the current filename in the __filename variable
@@ -54,6 +57,9 @@ const PORT = process.env.PORT || 6001;
 // Server will run if connection to MongoDB is successful
 mongoose.connect(process.env.MONGO_URL).then(() => {
     app.listen(PORT, () => {
+          /* ADD DATA ONE TIME */
+    // User.insertMany(users);
+    // Post.insertMany(posts);
         console.log(`MongoDB connection established, server running on port ${PORT}`);
     });
 })

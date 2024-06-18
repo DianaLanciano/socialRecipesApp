@@ -52,18 +52,20 @@ export const likePost = async (req, res) => {
     const { id } = req.params;
     const { userId } = req.body;
     const post = await Post.findById(id);
-    const isLiked = post.likes.get(userId);
+    const isLiked = post.likes.get(userId); // check if user has already liked the post
 
     if (isLiked) {
+      // if user has already liked the post, remove the like
       post.likes.delete(userId);
     } else {
+      // if user has not liked the post, add the like
       post.likes.set(userId, true);
     }
 
     const updatedPost = await Post.findByIdAndUpdate(
       id,
-      { likes: post.likes },
-      { new: true }
+      { likes: post.likes }, 
+      { new: true } 
     );
 
     res.status(200).json(updatedPost);
