@@ -3,50 +3,32 @@ import {
   Box,
   Button,
   TextField,
-  Typography,
   useMediaQuery,
+  Typography,
   useTheme,
 } from "@mui/material";
-import { EditOutlined } from "@mui/icons-material";
+import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import { Formik } from "formik";
-import * as ypu from "yup";
+import * as yup from "yup";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { login } from "state";
+import { setLogin } from "state";
 import Dropzone from "react-dropzone";
 import FlexBetween from "components/FlexBetween";
 
-/* VALIDATION AND PATTERN FOR FORM FIELDS */
-const registerSchema = ypu.object().shape({
-  firstName: ypu
-    .string()
-    .min(2, "Too Short!")
-    .max(50, "Too Long!")
-    .required("First name is required"),
-  lastName: ypu
-    .string()
-    .min(2, "Too Short!")
-    .max(50, "Too Long!")
-    .required("Last name is required"),
-  email: ypu.string().email("Invalid email").required("Email is required"),
-  password: ypu
-    .string()
-    .min(6, "Password must be at least 6 characters")
-    .required("Password is required"),
-  location: ypu
-    .string()
-    .min(2, "Too Short!")
-    .max(50, "Too Long!")
-    .required("Location is required"),
-  picture: ypu.string().required("Profile picture is required"),
+const registerSchema = yup.object().shape({
+  firstName: yup.string().required("required"),
+  lastName: yup.string().required("required"),
+  email: yup.string().email("invalid email").required("required"),
+  password: yup.string().required("required"),
+  location: yup.string().required("required"),
+  occupation: yup.string().required("required"),
+  picture: yup.string().required("required"),
 });
 
-const loginSchema = ypu.object().shape({
-  email: ypu.string().email("Invalid email").required("Email is required"),
-  password: ypu
-    .string()
-    .min(6, "Password must be at least 6 characters")
-    .required("Password is required"),
+const loginSchema = yup.object().shape({
+  email: yup.string().email("invalid email").required("required"),
+  password: yup.string().required("required"),
 });
 
 const initialValuesRegister = {
@@ -55,6 +37,7 @@ const initialValuesRegister = {
   email: "",
   password: "",
   location: "",
+  occupation: "",
   picture: "",
 };
 
@@ -68,11 +51,56 @@ const Form = () => {
   const { palette } = useTheme();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const isNonMobileScreens = useMediaQuery("(min-width: 600px)");
+  const isNonMobile = useMediaQuery("(min-width:600px)");
   const isLogin = pageType === "login";
   const isRegister = pageType === "register";
 
-  const handleFormSubmit = async (values) => {};
+  const register = async (values, onSubmitProps) => {
+    // this allows us to send form info with image
+    const formData = new FormData();
+    for (let value in values) {
+      formData.append(value, values[value]);
+    }
+    formData.append("profilePicture", values.picture.name);
+
+    const savedUserResponse = await fetch(
+      "http://localhost:3001/auth/register",
+      {
+        method: "POST",
+        body: formData,
+      }
+    );
+    const savedUser = await savedUserResponse.json();
+    onSubmitProps.resetForm();
+
+    if (savedUser) {
+      setPageType("login");
+    }
+  };
+
+  const login = async (values, onSubmitProps) => {
+    const loggedInResponse = await fetch("http://localhost:3001/auth/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(values),
+    });
+    const loggedIn = await loggedInResponse.json();
+    onSubmitProps.resetForm();
+    if (loggedIn) {
+      dispatch(
+        setLogin({
+          user: loggedIn.user,
+          token: loggedIn.token,
+        })
+      );
+      navigate("/home");
+    }
+  };
+
+  const handleFormSubmit = async (values, onSubmitProps) => {
+    if (isLogin) await login(values, onSubmitProps);
+    if (isRegister) await register(values, onSubmitProps);
+  };
 
   return (
     <Formik
@@ -80,111 +108,168 @@ const Form = () => {
       initialValues={isLogin ? initialValuesLogin : initialValuesRegister}
       validationSchema={isLogin ? loginSchema : registerSchema}
     >
-        {/* In order to use this options in the form we destruct theme like so: */}
-        {({
-            values, // will be equal to the initial values on the first time. After that it will be equal to the values that we typed in the form
-            errors, // will involve all the errors that we have in the form
-            touched, // if we touched the field it will be true only when the user will click on the field and then click out of the field
-            handleChange,   
-            handleBlur, // will trigger when we click out of the field
-            handleSubmit,
-            isSubmitting, // we will use this to disable the button when the form is submitting
-            setFieldValue, // we will use this to set the value of the picture field cause we need to set it manually
-            resetForm, // we will use the resetForm to reset the form values after we submit it
-        }) => (
-            <form onSubmit={handleSubmit}>
+      {({
+        values,
+        errors,
+        touched,
+        handleBlur,
+        handleChange,
+        handleSubmit,
+        setFieldValue,
+        resetForm,
+      }) => (
+        <form onSubmit={handleSubmit}>
+          <Box
+            display="grid"
+            gap="30px"
+            gridTemplateColumns="repeat(4, minmax(0, 1fr))"
+            sx={{
+              "& > div": { gridColumn: isNonMobile ? undefined : "span 4" },
+            }}
+          >
+            {isRegister && (
+              <>
+                <TextField
+                  label="First Name"
+                  onBlur={handleBlur}
+                  onChange={handleChange}
+                  value={values.firstName}
+                  name="firstName"
+                  error={
+                    Boolean(touched.firstName) && Boolean(errors.firstName)
+                  }
+                  helperText={touched.firstName && errors.firstName}
+                  sx={{ gridColumn: "span 2" }}
+                />
+                <TextField
+                  label="Last Name"
+                  onBlur={handleBlur}
+                  onChange={handleChange}
+                  value={values.lastName}
+                  name="lastName"
+                  error={Boolean(touched.lastName) && Boolean(errors.lastName)}
+                  helperText={touched.lastName && errors.lastName}
+                  sx={{ gridColumn: "span 2" }}
+                />
+                <TextField
+                  label="Location"
+                  onBlur={handleBlur}
+                  onChange={handleChange}
+                  value={values.location}
+                  name="location"
+                  error={Boolean(touched.location) && Boolean(errors.location)}
+                  helperText={touched.location && errors.location}
+                  sx={{ gridColumn: "span 4" }}
+                />
+                <TextField
+                  label="Occupation"
+                  onBlur={handleBlur}
+                  onChange={handleChange}
+                  value={values.occupation}
+                  name="occupation"
+                  error={
+                    Boolean(touched.occupation) && Boolean(errors.occupation)
+                  }
+                  helperText={touched.occupation && errors.occupation}
+                  sx={{ gridColumn: "span 4" }}
+                />
                 <Box
-                 display="grid"
-                 gap="30px"
-                 gridTemplateColumns="repeat(4, minmax(0, 1fr))" // 4 columns if it will be very small it will be 0 and if it will be very big it will be 1fr
-                 sx={{
-                    "& > div": { gridColumn: isNonMobileScreens ? undefined : "span 4"}
-                 }}
+                  gridColumn="span 4"
+                  border={`1px solid ${palette.neutral.medium}`}
+                  borderRadius="5px"
+                  p="1rem"
                 >
-                    {true && (
-                        <>
-                        <TextField
-                            label="First Name"
-                            name="firstName"
-                            value={values.firstName}
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                            error={Boolean(touched.firstName) && Boolean(errors.firstName)}
-                            helperText={touched.firstName && errors.firstName} 
-                            sx={{ gridColumn: "span 2" }}
-                        />
-                         <TextField
-                            label="Last Name"
-                            name="lastName"
-                            value={values.lastName}
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                            error={Boolean(touched.lastName) && Boolean(errors.lastName)}
-                            helperText={touched.lastName && errors.lastName} 
-                            sx={{ gridColumn: "span 2" }}
-                        />
-                         <TextField
-                            label="Location"
-                            name="location"
-                            value={values.location}
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                            error={Boolean(touched.location) && Boolean(errors.location)}
-                            helperText={touched.location && errors.location} 
-                            sx={{ gridColumn: "span 4" }}
-                        />
-                        <Box
-                        gridColumn='span 4'
-                        border={`1px solid ${palette.neutral.medium}`}
-                        borderRadius="5px"
-                        p="1rem" // padding
-                        >
-                            <Dropzone
-                              acceptedFiles=".jpg,.png.jpeg"
-                              multiple={false}
-                              onDrop={(acceptedFiles) => {
-                                  setFieldValue("picture", acceptedFiles[0]);
-                              }}                           
-                              >
-                                {/*  the callback function for drop picture*/ }
-                                {({ getRootProps, getInputProps }) => ( 
-                                    <Box
-                                     {...getRootProps()} // we have to pass those props the dropzone is creating for us
-                                      border={`2px dashed ${palette.primary.main}`}
-                                      sx={{ "&:hover": { cursor: 'pointer' } }}
-                                    >
-                                        <input {...getInputProps()} />
-                                        {!values.picture ? 
-                                        (<p>Add Picture Here</p>) : 
-                                        (
-                                            <FlexBetween>
-                                                <Typography>{values.picture.name}</Typography>
-                                                <EditOutlined />
-                                            </FlexBetween>
-                                        )}
-                                    </Box>
-                                )}
-                            </Dropzone>
-                        </Box>
-                         <TextField
-                            label="Email"
-                            name="email"
-                            value={values.email}
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                            error={Boolean(touched.email) && Boolean(errors.email)}
-                            helperText={touched.email && errors.email} 
-                            sx={{ gridColumn: "span 4" }}
-                        />
-                            
-                        </>
+                  <Dropzone
+                    acceptedFiles=".jpg,.jpeg,.png"
+                    multiple={false}
+                    onDrop={(acceptedFiles) =>
+                      setFieldValue("picture", acceptedFiles[0])
+                    }
+                  >
+                    {({ getRootProps, getInputProps }) => (
+                      <Box
+                        {...getRootProps()}
+                        border={`2px dashed ${palette.primary.main}`}
+                        p="1rem"
+                        sx={{ "&:hover": { cursor: "pointer" } }}
+                      >
+                        <input {...getInputProps()} />
+                        {!values.picture ? (
+                          <p>Add Picture Here</p>
+                        ) : (
+                          <FlexBetween>
+                            <Typography>{values.picture.name}</Typography>
+                            <EditOutlinedIcon />
+                          </FlexBetween>
+                        )}
+                      </Box>
                     )}
+                  </Dropzone>
                 </Box>
-            </form>
-        )}
+              </>
+            )}
+
+            <TextField
+              label="Email"
+              onBlur={handleBlur}
+              onChange={handleChange}
+              value={values.email}
+              name="email"
+              error={Boolean(touched.email) && Boolean(errors.email)}
+              helperText={touched.email && errors.email}
+              sx={{ gridColumn: "span 4" }}
+            />
+            <TextField
+              label="Password"
+              type="password"
+              onBlur={handleBlur}
+              onChange={handleChange}
+              value={values.password}
+              name="password"
+              error={Boolean(touched.password) && Boolean(errors.password)}
+              helperText={touched.password && errors.password}
+              sx={{ gridColumn: "span 4" }}
+            />
+          </Box>
+
+          {/* BUTTONS */}
+          <Box>
+            <Button
+              fullWidth
+              type="submit"
+              sx={{
+                m: "2rem 0",
+                p: "1rem",
+                backgroundColor: palette.primary.main,
+                color: palette.background.alt,
+                "&:hover": { color: palette.primary.main },
+              }}
+            >
+              {isLogin ? "LOGIN" : "REGISTER"}
+            </Button>
+            <Typography
+              onClick={() => {
+                setPageType(isLogin ? "register" : "login");
+                resetForm();
+              }}
+              sx={{
+                textDecoration: "underline",
+                color: palette.primary.main,
+                "&:hover": {
+                  cursor: "pointer",
+                  color: palette.primary.light,
+                },
+              }}
+            >
+              {isLogin
+                ? "Don't have an account? Sign Up here."
+                : "Already have an account? Login here."}
+            </Typography>
+          </Box>
+        </form>
+      )}
     </Formik>
   );
 };
-
 
 export default Form;
