@@ -7,6 +7,7 @@ import { useSelector } from "react-redux";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import { createTheme } from "@mui/material/styles";
 import { themeSettings } from "./theme";
+import { Toaster } from 'react-hot-toast';
 
 function App() {
   const mode = useSelector((state) => state.mode);
@@ -29,6 +30,7 @@ function App() {
               element={isAuth ? <ProfilePage /> : <Navigate to="/" />}
             />
           </Routes>
+          <Toaster />
         </ThemeProvider>
       </BrowserRouter>
     </div>
