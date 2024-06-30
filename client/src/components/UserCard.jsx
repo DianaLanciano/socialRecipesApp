@@ -93,9 +93,10 @@ const UserCard = ({ userId, profilePicture }) => {
           <Typography color={medium}>{location}</Typography>
         </Box>
       </Box>
+      <Divider />
 
       {/* 3  for social media*/}
-      <Box p="1tem 0">
+      <Box p="1tem 0" mt="0.5rem">
         <Typography fontSize="1rem" color={main} fontWeight="500">
           Social Media
         </Typography>
