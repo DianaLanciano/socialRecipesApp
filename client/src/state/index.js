@@ -11,7 +11,7 @@ const initialState = {
 export const authSlice = createSlice({
     name: "auth",
     initialState,
-    reducers: { // basiclly those are functions that will change the state and the payload its like argument to the function
+    reducers: { // basiclly those are functions that will change the state,  and the payload its like argument to the function
         setMode: (state) => {
             state.mode = state.mode === "light" ? "dark" : "light";
         },

@@ -15,6 +15,7 @@ import { useDispatch } from "react-redux";
 import { setLogin } from "state";
 import Dropzone from "react-dropzone";
 import FlexBetween from "components/FlexBetween";
+import toast from 'react-hot-toast'
 
 /* VALIDATION AND PATTERN FOR FORM FIELDS */
 const registerSchema = yup.object().shape({
