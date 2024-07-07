@@ -1,7 +1,10 @@
 import { Box, useMediaQuery } from "@mui/material";
 import UserCard from "components/UserCard";
+import MyPostCard from "components/MyPostCard";
 import Navbar from "scenes/navbar";
 import { useSelector } from "react-redux";
+import FeedPosts from "components/FeedPosts";
+
 
 const HomePage = () => {
   const isNonMobile = useMediaQuery("(min-width:1000px)");
@@ -23,7 +26,10 @@ const HomePage = () => {
         <Box
           flexBasis={isNonMobile ? "42%" : undefined}
           mt={isNonMobile ? undefined : "2rem"}
-        ></Box>
+        >
+          <MyPostCard profilePicture={profilePicture} />
+          <FeedPosts userId={_id} />
+        </Box>
 
         {/* friends will be displayed only on none mobile screens */}
         {isNonMobile && <Box flexBasis="26%"></Box>}

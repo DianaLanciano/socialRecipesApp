@@ -35,14 +35,15 @@ app.use('/images', express.static(path.join(__dirname, 'public/images'))); // se
 
 /******************************************* FILE STORAGE *******************************************/
 const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
+    destination: function (req, file, cb) {
         cb(null, 'public/images');
     },
-    filename: (req, file, cb) => {
+    filename: function (req, file, cb) {
+        console.log('originalname', file.originalname);
         cb(null, file.originalname);
     }
 });
-const upload = multer({ storage: storage });
+const upload = multer({ storage });
 
 /******************************************* ROUTES *******************************************/
 app.post("/auth/register", upload.single("picture"), register); // needs to be here for upload 

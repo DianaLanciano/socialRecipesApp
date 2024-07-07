@@ -1,8 +1,6 @@
 import {
   ManageAccountsOutlined,
-  EditOutlined,
   LocationOnOutlined,
-  WorkOutlineOutlined,
 } from "@mui/icons-material";
 import { Box, Typography, Divider, useTheme } from "@mui/material";
 import UserImg from "./UserImg";
@@ -56,7 +54,7 @@ const UserCard = ({ userId, profilePicture }) => {
   const { firstName, lastName, friends, location } = user;
 
   return (
-    <WidgetWrapper>
+    <WidgetWrapper sx={{ border: 1, borderColor: 'primary.main' }} >
       {/* 1 line for image name and last name and friends*/}
       <FlexBetween
         gap="0.5rem"
@@ -110,7 +108,6 @@ const UserCard = ({ userId, profilePicture }) => {
               <Typography color={medium}>Social Network</Typography>
             </Box>
           </FlexBetween>
-          <EditOutlined sx={{ color: main }} />
         </FlexBetween>
 
         <FlexBetween gap="1rem">
@@ -123,7 +120,6 @@ const UserCard = ({ userId, profilePicture }) => {
               <Typography color={medium}>Network Platform</Typography>
             </Box>
           </FlexBetween>
-          <EditOutlined sx={{ color: main }} />
         </FlexBetween>
       </Box>
     </WidgetWrapper>
