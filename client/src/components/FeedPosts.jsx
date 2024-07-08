@@ -49,41 +49,42 @@ const FeedPosts = ({ userId, isProfile = false }) => {
     } else {
       getPosts();
     }
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, []);
 
   const src = "https:thispersondoesnotexist.com/image"
   return (
-    <>
-      {posts.map(
-        ({
-          _id,
-          userId,
-          firstName,
-          lastName,
-          title,
-          description,
-          location,
-          picturePath,
-          profilePicture: src,
-          likes,
-          comments,
-        }) => (
-          <PostFeedCard
-            key={_id}
-            postId={_id}
-            postUserId={userId}
-            name={`${firstName} ${lastName}`}
-            postTitle={title}
-            description={description}
-            location={location}
-            picturePath={picturePath}
-            profilePicture={src}
-            likes={likes}
-            comments={comments}
-          />
-        )
-      )}
-    </>
+    <h1>feed posts</h1>
+    // <>
+    //   {posts.map(
+    //     ({
+    //       _id,
+    //       userId,
+    //       firstName,
+    //       lastName,
+    //       title,
+    //       description,
+    //       location,
+    //       picturePath,
+    //       profilePicture: src,
+    //       likes,
+    //       comments,
+    //     }) => (
+    //       <PostFeedCard
+    //         key={_id}
+    //         postId={_id}
+    //         postUserId={userId}
+    //         name={`${firstName} ${lastName}`}
+    //         postTitle={title}
+    //         description={description}
+    //         location={location}
+    //         picturePath={picturePath}
+    //         profilePicture={src}
+    //         likes={likes}
+    //         comments={comments}
+    //       />
+    //     )
+    //   )}
+    // </>
   );
 };
 

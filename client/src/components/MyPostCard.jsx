@@ -30,9 +30,8 @@ import toast from "react-hot-toast";
 const MyPostCard = ({ profilePicture }) => {
   const dispatch = useDispatch();
   const [isImage, setIsImage] = useState(false);
-  const [contentBox, setContentBox] = useState(false);
   const [image, setImage] = useState(null);
-  const [post, setPost] = useState({});
+  const [post, setPost] = useState({ title: "", description: "" });
   const { palette } = useTheme();
   const { _id } = useSelector((state) => state.user);
   const token = useSelector((state) => state.token);
@@ -66,10 +65,11 @@ const MyPostCard = ({ profilePicture }) => {
         );
       }
 
-      const data = await res.json();
-      dispatch(setPosts({ data }));
+      const posts = await res.json();
+      
+      setPost({ title: "", description: "" });
       setImage(null);
-      setPost({});
+      dispatch(setPosts({ posts }));
     } catch (error) {
       console.log("Error in posting", error.message);
       toast.error(error.message);

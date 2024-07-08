@@ -28,7 +28,7 @@ const HomePage = () => {
           mt={isNonMobile ? undefined : "2rem"}
         >
           <MyPostCard profilePicture={profilePicture} />
-          <FeedPosts userId={_id} />
+          {/* <FeedPosts userId={_id} /> */}
         </Box>
 
         {/* friends will be displayed only on none mobile screens */}
