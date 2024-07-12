@@ -62,7 +62,7 @@ const UserCard = ({ userId, profilePicture }) => {
         onClick={() => navigate(`/profile/${userId}`)}
       >
         <FlexBetween gap="0.5rem">
-          <UserImg src={profilePicture} />
+          <UserImg image={profilePicture} />
           <Box>
             <Typography
               variant="h4"

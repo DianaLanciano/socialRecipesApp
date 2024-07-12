@@ -62,10 +62,10 @@ const PostFeedCard = ({
         friendId={postUserId}
         name={name}
         subtitle={location}
-        userPicturePath={profilePicture}
+        profilePicture={profilePicture}
       />
       <Typography color={main} sx={{ mt: "1rem" }}>
-        {description}
+        {postTitle}
       </Typography>
       {picturePath && (
         <img
@@ -73,7 +73,8 @@ const PostFeedCard = ({
           height="auto"
           alt="post"
           style={{ borderRadius: "0.75rem", marginTop: "0.75rem" }}
-          src={`http://localhost:3001/public/images/${picturePath}`}
+          src={`http://localhost:3001/images/${picturePath}`}
+          crossOrigin="anonymous"
         />
       )}
       <FlexBetween mt="0.25rem">

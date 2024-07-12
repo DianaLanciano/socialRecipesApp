@@ -51,40 +51,38 @@ const FeedPosts = ({ userId, isProfile = false }) => {
     }
   }, []);
 
-  const src = "https:thispersondoesnotexist.com/image"
   return (
-    <h1>feed posts</h1>
-    // <>
-    //   {posts.map(
-    //     ({
-    //       _id,
-    //       userId,
-    //       firstName,
-    //       lastName,
-    //       title,
-    //       description,
-    //       location,
-    //       picturePath,
-    //       profilePicture: src,
-    //       likes,
-    //       comments,
-    //     }) => (
-    //       <PostFeedCard
-    //         key={_id}
-    //         postId={_id}
-    //         postUserId={userId}
-    //         name={`${firstName} ${lastName}`}
-    //         postTitle={title}
-    //         description={description}
-    //         location={location}
-    //         picturePath={picturePath}
-    //         profilePicture={src}
-    //         likes={likes}
-    //         comments={comments}
-    //       />
-    //     )
-    //   )}
-    // </>
+    <>
+      {posts.map(
+        ({
+          _id,
+          userId,
+          firstName,
+          lastName,
+          title,
+          description,
+          location,
+          picturePath,
+          userProfilePicture,
+          likes,
+          comments,
+        }) => (
+          <PostFeedCard
+            key={_id}
+            postId={_id}
+            postUserId={userId}
+            name={`${firstName} ${lastName}`}
+            postTitle={title}
+            description={description}
+            location={location}
+            picturePath={picturePath}
+            profilePicture={userProfilePicture}
+            likes={likes}
+            comments={comments}
+          />
+        )
+      )}
+    </>
   );
 };
 
