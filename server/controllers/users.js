@@ -25,7 +25,7 @@ export const getUserFriends = async (req, res) => {
     const user = await User.findById(id);
     if (!user) res.status(400).json('No user was found');
 
-    const friends = await PromiseAll(
+    const friends = await Promise.all(
         user.friends.map(id => User.findById(id))
     );
 
@@ -63,7 +63,7 @@ export const addRemoveFriends = async (req, res) => {
         await friend.save();
 
         // now format users friends and send to client
-        const friends = await PromiseAll(
+        const friends = await Promise.all(
             currentUser.friends.map(id => User.findById(id))
         );
     

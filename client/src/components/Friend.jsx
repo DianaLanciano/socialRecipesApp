@@ -8,7 +8,7 @@ import UserImg from "./UserImg";
 import toast from "react-hot-toast";
 
 
-const Friend = ({ friendId, name, subtitle, profilePicture }) => {
+const Friend = ({ friendId, name, location, profilePicture }) => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const { _id } = useSelector((state) => state.user);
@@ -21,22 +21,22 @@ const Friend = ({ friendId, name, subtitle, profilePicture }) => {
     const main = palette.neutral.main;
     const medium = palette.neutral.medium;
 
-    const isFriend = friends.find(friend => friend._id === friendId);
+    const isFriend = friends.length > 0 ? friends.find((friend) => friend._id === friendId) : false;
 
     const fetchFriends = async () => {
         try {
-            const res = await fetch(`http://localhost:3001/users/${_id}/${friendId}`, {
-                headers: {
-                    method: 'PATCH',
+            const response = await fetch(
+                `http://localhost:3001/users/${_id}/${friendId}`,
+                {
+                  method: "PATCH",
+                  headers: {
                     Authorization: `Bearer ${token}`,
-                    'Content-Type': 'application/json',
-                },
-            });
-            if (!res.ok) {
-                throw new Error("Failed to fetch friends");
-            }
-            const data = await res.json();
-            dispatch(setFriends({ friends: data }));
+                    "Content-Type": "application/json",
+                  },
+                }
+              );
+              const data = await response.json();
+              dispatch(setFriends({ friends: data }));
         } catch (err) {
             toast.error(err.message);
         }
@@ -66,7 +66,7 @@ const Friend = ({ friendId, name, subtitle, profilePicture }) => {
                     {name}
                 </Typography>
                 <Typography color={medium} fontSize="0.75rem" >
-                    {subtitle}
+                    {location}
                 </Typography>
               </Box>
             </FlexBetween>

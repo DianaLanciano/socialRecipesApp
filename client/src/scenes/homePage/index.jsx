@@ -4,6 +4,8 @@ import MyPostCard from "components/MyPostCard";
 import Navbar from "scenes/navbar";
 import { useSelector } from "react-redux";
 import FeedPosts from "components/FeedPosts";
+import AdvertWidget from "components/Advert";
+import FriendsList from "components/FriendsList";
 
 
 const HomePage = () => {
@@ -32,7 +34,13 @@ const HomePage = () => {
         </Box>
 
         {/* friends will be displayed only on none mobile screens */}
-        {isNonMobile && <Box flexBasis="26%"></Box>}
+        {isNonMobile && (
+          <Box flexBasis="20%">
+            <AdvertWidget />
+            <Box m="2rem 0" />
+            <FriendsList userId={_id}/>
+          </Box>
+          )}
       </Box>
     </Box>
   );
