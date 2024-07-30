@@ -20,9 +20,9 @@ import { users, posts } from "./data/index.js";
 
 /******************************************* CONFIGURATION *******************************************/
 const __filename = fileURLToPath(import.meta.url); // stores the current filename in the __filename variable
-const __dirname = path.dirname(__filename); // stores this directory name in the __dirname variable
 
 dotenv.config(); 
+const __dirname = path.resolve(); // gives root directory name
 const app = express(); 
 app.use(express.json()); 
 app.use(helmet()); // helps secure Express apps by setting various HTTP headers
@@ -50,6 +50,11 @@ app.post("/posts", verifyToken, upload.single("picture"), createPost);
 app.use("/auth", authRoutes);
 app.use("/users", userRoutes);
 app.use("/posts", postsRoutes);
+app.use(express.static(path.join(__dirname, "/client/build"))); // serve static files from the React app
+// with this line we can run the frontend from server side
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, "client", "dist", "index.html"));
+});
 
 
 /******************************************* DB SETUP & SERVER CONNECTION *******************************************/
