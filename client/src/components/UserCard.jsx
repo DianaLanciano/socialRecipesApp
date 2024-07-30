@@ -24,7 +24,7 @@ const UserCard = ({ userId, profilePicture }) => {
 
   const getUser = async () => {
     try {
-      const response = await fetch(`http://localhost:3001/users/${userId}`, {
+      const response = await fetch(`https://socialrecipesapp.onrender.com/users/${userId}`, {
         method: "GET",
         headers: {
           // In the backend in middleware/auth.js we set the token to start with 'Bearer '

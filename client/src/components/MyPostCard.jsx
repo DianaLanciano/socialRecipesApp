@@ -51,7 +51,7 @@ const MyPostCard = ({ profilePicture }) => {
 
 
     try {
-      const res = await fetch("http://localhost:3001/posts", {
+      const res = await fetch("https://socialrecipesapp.onrender.com/posts", {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,

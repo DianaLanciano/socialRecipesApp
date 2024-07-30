@@ -14,7 +14,7 @@ const FriendsList = ({ userId }) => {
 
   const getFriends = async () => {
     try {
-      const res = await fetch(`http://localhost:3001/users/${userId}/friends`, {
+      const res = await fetch(`https://socialrecipesapp.onrender.com/users/${userId}/friends`, {
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,

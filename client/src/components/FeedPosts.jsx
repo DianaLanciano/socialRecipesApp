@@ -12,7 +12,7 @@ const FeedPosts = ({ userId, isProfile = false }) => {
 
   const getPosts = async () => {
     try {
-      const res = await fetch("http://localhost:3001/posts/", {
+      const res = await fetch("https://socialrecipesapp.onrender.com/posts/", {
         method: "GET",
         headers: { Authorization: `Bearer ${token}` },
       });
